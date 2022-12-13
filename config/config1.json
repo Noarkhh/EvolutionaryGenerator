@@ -1,0 +1,18 @@
+{
+  "mapWidth": 50,
+  "mapHeight": 50,
+  "mapVariant": "Globe",
+  "startingPlants": 10,
+  "plantEnergy": 5,
+  "dailyPlants": 3,
+  "plantGrowthVariant": "Overgrown Equators",
+  "startingAnimals": 10,
+  "startingAnimalEnergy": 15,
+  "satiatedEnergy": 30,
+  "procreationEnergyCost": 15,
+  "minMutations": 1,
+  "maxMutations": 3,
+  "mutationsVariant": "Full Random",
+  "genomeLength": 10,
+  "behaviorVariant": "Full Predestination"
+}
