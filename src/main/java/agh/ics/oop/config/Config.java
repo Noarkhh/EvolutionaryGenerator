@@ -51,7 +51,7 @@ public class Config {
         }
     }
 
-    public int getStarringAnimals() {
+    public int getStartingAnimals() {
         return ((Long) configData.get("startingAnimals")).intValue();
     }
 
