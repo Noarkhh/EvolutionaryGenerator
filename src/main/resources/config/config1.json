@@ -1,6 +1,6 @@
 {
-  "mapWidth": 50,
-  "mapHeight": 50,
+  "mapWidth": 15,
+  "mapHeight": 15,
   "mapVariant": "Globe",
   "startingPlants": 10,
   "plantEnergy": 5,

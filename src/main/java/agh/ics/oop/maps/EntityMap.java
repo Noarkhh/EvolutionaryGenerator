@@ -17,14 +17,14 @@ public abstract class EntityMap implements IWorldMap<Entity>, IPositionObserver 
     private final List<Animal> animals = new LinkedList<>();
     private final List<Plant> plants = new LinkedList<>();
 
-    private final Vector size;
+    public final Vector size;
     private final Config config;
 
     public EntityMap(Config config) {
         this.config = config;
         size = config.getMapSize();
         for (int i = 0; i < config.getStartingAnimals(); i++) spawnAnimal();
-        for (int i = 0; i < config.getStartingPlants(); i++) growPlant();
+//        for (int i = 0; i < config.getStartingPlants(); i++) growPlant();
     }
 
     public void spawnAnimal() {

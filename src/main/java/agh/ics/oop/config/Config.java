@@ -13,8 +13,8 @@ import java.io.FileReader;
 public class Config {
     private final JSONObject configData;
 
-    public Config() throws Exception {
-        configData = (JSONObject) new JSONParser().parse(new FileReader("config/config1.json"));
+    public Config(String configPath) throws Exception {
+        configData = (JSONObject) new JSONParser().parse(new FileReader(configPath));
     }
 
     public Vector getMapSize() {

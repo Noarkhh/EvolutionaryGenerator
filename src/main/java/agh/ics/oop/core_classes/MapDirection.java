@@ -1,7 +1,15 @@
 package agh.ics.oop.core_classes;
 
+import java.util.Random;
+
 public enum MapDirection {
     N, NE, E, SE, S, SW, W, NW;
+
+    private static final Random RNG = new Random();
+
+    public static MapDirection getRandom() {
+        return values()[RNG.nextInt(MapDirection.values().length)];
+    }
 
     @Override
     public String toString() {

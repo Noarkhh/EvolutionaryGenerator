@@ -1,6 +1,6 @@
 package agh.ics.oop.entities;
 
-import agh.ics.oop.core_classes.ImageContainer;
+import agh.ics.oop.graphics.ImageContainer;
 import agh.ics.oop.core_classes.Vector;
 import javafx.scene.image.Image;
 
