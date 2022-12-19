@@ -28,8 +28,8 @@ public class App extends Application implements IPositionObserver {
     private TileMap tileMap;
 
     private final Vector windowSize = new Vector(1000, 1000);
-    private final Vector verticalHeaderCellSize = new Vector(25, 40);
-    private final Vector horizontalHeaderCellSize = new Vector(40, 25);
+    private final Vector verticalHeaderCellSize = new Vector(25, 60);
+    private final Vector horizontalHeaderCellSize = new Vector(60, 25);
 
     private final GridPane grid = new GridPane();
 
@@ -54,7 +54,7 @@ public class App extends Application implements IPositionObserver {
     @Override
     public void init() throws Exception {
         super.init();
-        List<String> imageNames = List.of(new String[]{"N", "NE", "E", "SE", "S", "SW", "W", "NW"});
+        List<String> imageNames = List.of(new String[]{"N", "NE", "E", "SE", "S", "SW", "W", "NW", "plant"});
         ImageContainer imageContainer = new ImageContainer(imageNames);
         Config config = new Config("src/main/resources/config/config1.json");
         entityMap = new Globe(config);
@@ -101,6 +101,8 @@ public class App extends Application implements IPositionObserver {
 
 //        GuiElementBox guiElementBox = new GuiElementBox(elementToDraw, spriteContainer);
         ImageView imageView = new ImageView(entities.get(0).getImage());
+        imageView.setFitHeight(60);
+        imageView.setFitWidth(60);
 
         grid.add(imageView, gridDrawPosition.x, gridDrawPosition.y);
         GridPane.setHalignment(imageView, HPos.CENTER);
