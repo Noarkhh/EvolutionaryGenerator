@@ -42,7 +42,7 @@ public class Main {
 
             System.out.println(config.getGenomeLength());
 
-//            Application.launch(App.class, args);
+            Application.launch(App.class, args);
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }

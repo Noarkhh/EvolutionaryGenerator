@@ -10,7 +10,7 @@ import java.util.List;
 public abstract class Entity extends Sprite {
 
     private final List<IPositionObserver> observers = new LinkedList<>();
-    private final EntityMap entityMap;
+    protected final EntityMap entityMap;
 
     protected Entity(Vector position, EntityMap entityMap) {
         super(position);

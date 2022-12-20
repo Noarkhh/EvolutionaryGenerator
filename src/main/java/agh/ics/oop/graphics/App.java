@@ -6,6 +6,7 @@ import agh.ics.oop.core_classes.Vector;
 import agh.ics.oop.entities.Animal;
 import agh.ics.oop.entities.Entity;
 import agh.ics.oop.entities.Sprite;
+import agh.ics.oop.genes.GenomeFactory;
 import agh.ics.oop.maps.EntityMap;
 import agh.ics.oop.maps.Globe;
 import agh.ics.oop.maps.HellishPortal;
@@ -59,6 +60,9 @@ public class App extends Application implements IPositionObserver {
         Config config = new Config("src/main/resources/config/config1.json");
         this.tileMap = new TileMap(config);
         entityMap = new Globe(config, tileMap);
+        entityMap.place(new Animal(new Vector(5, 5), entityMap, config, GenomeFactory.createGenome(config), config.getStartingAnimalEnergy()));
+        entityMap.place(new Animal(new Vector(5, 5), entityMap, config, GenomeFactory.createGenome(config), config.getStartingAnimalEnergy()));
+        entityMap.procreate();
     }
 
     private void drawHeaders(GridPane grid) {

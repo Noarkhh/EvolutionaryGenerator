@@ -7,10 +7,7 @@ import agh.ics.oop.entities.*;
 import agh.ics.oop.genes.Genome;
 import agh.ics.oop.genes.GenomeFactory;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public abstract class EntityMap implements IWorldMap<Entity>, IPositionObserver {
     private final HashMap<Vector, List<Entity>> entities = new HashMap<>();
@@ -90,5 +87,12 @@ public abstract class EntityMap implements IWorldMap<Entity>, IPositionObserver 
     @Override
     public boolean remove(Entity objectToRemove) {
         return remove(objectToRemove.getPosition(), objectToRemove);
+    }
+
+    public void procreate() {
+        for (Map.Entry<Vector, List<Entity>> entry : entities.entrySet()) {
+            if (entry.getValue().size() < 2) continue;
+
+        }
     }
 }
