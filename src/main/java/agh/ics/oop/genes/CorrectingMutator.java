@@ -4,21 +4,23 @@ import agh.ics.oop.config.Config;
 
 import java.util.Random;
 
-public class CorrectingMutator implements Mutator {
-    private final int minMutations;
-    private final int maxMutations;
-    private final Random RNG = new Random();
-
+public class CorrectingMutator extends Mutator {
     public CorrectingMutator(Config config) {
-        minMutations = config.getMinMutations();
-        maxMutations = config.getMaxMutations();
+        super(config);
     }
 
     @Override
     public int[] mutate(int[] genes) {
         int mutations = RNG.nextInt(minMutations, maxMutations + 1);
         for (int i = 0; i < mutations; i++) {
-            genes[RNG.nextInt(genes.length)] = RNG.nextInt(7);
+            int correction;
+            if (RNG.nextInt(2) == 0) {
+                correction = 1;
+            } else {
+                correction = -1;
+            }
+            int mutationIndex = RNG.nextInt(genes.length);
+            genes[mutationIndex] = (((genes[mutationIndex] + correction) % 8) + 8) % 8;
         }
         return genes;
     }

@@ -10,13 +10,20 @@ public class Animal extends Entity {
 
     private MapDirection direction = MapDirection.getRandom();
     private int energy;
+    public final Genome genome;
 
     public Animal(Vector position, EntityMap entityMap, Config config, Genome genome, int energy) {
         super(position, entityMap);
+        this.genome = genome;
+        this.energy = energy;
         image = imageContainer.getImage(this);
     }
 
     public MapDirection getDirection() {
         return direction;
+    }
+
+    public int getEnergy() {
+        return energy;
     }
 }

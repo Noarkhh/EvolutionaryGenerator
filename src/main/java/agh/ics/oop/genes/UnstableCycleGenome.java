@@ -3,16 +3,22 @@ package agh.ics.oop.genes;
 import agh.ics.oop.entities.Animal;
 
 public class UnstableCycleGenome extends Genome {
+
     protected UnstableCycleGenome(int genomeLength) {
         super(genomeLength);
     }
 
-    protected UnstableCycleGenome(int genomeLength, Animal parent1, Animal parent2, Mutator mutator, GeneRecombinator geneRecombinator) {
-        super(genomeLength, parent1, parent2, mutator, geneRecombinator);
+    protected UnstableCycleGenome(int[] genes) {
+        super(genes);
     }
 
     @Override
-    public int getGene() {
-        return 0;
+    public int getNextGene() {
+        if (RNG.nextInt(5) == 0) {
+            currentGeneIndex = RNG.nextInt(length);
+        } else {
+            currentGeneIndex = (currentGeneIndex + 1) % 8;
+        }
+        return genes[currentGeneIndex];
     }
 }

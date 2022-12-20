@@ -15,9 +15,11 @@ public class GenomeFactory {
             case NON_DARWINIAN -> new NonDarwinianRecombinator();
         };
 
+        int[] genes = mutator.mutate(geneRecombinator.recombine(parent1, parent2));
+
         return switch (config.getBehaviorVariant()) {
-            case A_TAD_OF_TOMFOOLERY -> new UnstableCycleGenome(config.getGenomeLength(), parent1, parent2, mutator, geneRecombinator);
-            case FULL_PREDESTINATION -> new StableCycleGenome(config.getGenomeLength(), parent1, parent2, mutator, geneRecombinator);
+            case A_TAD_OF_TOMFOOLERY -> new UnstableCycleGenome(genes);
+            case FULL_PREDESTINATION -> new StableCycleGenome(genes);
         };
     }
 

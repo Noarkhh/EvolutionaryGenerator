@@ -2,11 +2,13 @@ package agh.ics.oop.genes;
 
 import agh.ics.oop.entities.Animal;
 
-public class NonDarwinianRecombinator implements GeneRecombinator {
+import java.util.Random;
 
+public class NonDarwinianRecombinator extends GeneRecombinator {
+    private Random RNG = new Random();
 
     @Override
-    public int[] recombine(Animal animal1, Animal animal2) {
-        return new int[0];
+    protected float getLeftGenomeRatio(Animal animal1, Animal animal2) {
+        return (float) animal1.getEnergy() / (float) (animal1.getEnergy() + animal2.getEnergy());
     }
 }

@@ -4,14 +4,9 @@ import agh.ics.oop.config.Config;
 
 import java.util.Random;
 
-public class RandomMutator implements Mutator {
-    private final int minMutations;
-    private final int maxMutations;
-    private final Random RNG = new Random();
-
+public class RandomMutator extends Mutator {
     public RandomMutator(Config config) {
-        minMutations = config.getMinMutations();
-        maxMutations = config.getMaxMutations();
+        super(config);
     }
 
     @Override

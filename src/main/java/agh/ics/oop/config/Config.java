@@ -82,7 +82,7 @@ public class Config {
     }
 
     public int getGenomeLength() {
-        return ((Long) configData.get("minMutations")).intValue();
+        return ((Long) configData.get("genomeLength")).intValue();
     }
 
     public BehaviorVariant getBehaviorVariant() {
