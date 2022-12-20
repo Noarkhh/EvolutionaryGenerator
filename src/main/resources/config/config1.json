@@ -12,6 +12,7 @@
   "procreationEnergyCost": 15,
   "minMutations": 1,
   "maxMutations": 3,
+  "recombinationVariant": "Non-Darwinian",
   "mutationsVariant": "Full Random",
   "genomeLength": 10,
   "behaviorVariant": "Full Predestination"

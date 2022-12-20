@@ -11,12 +11,12 @@ import org.json.simple.parser.JSONParser;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Arrays;
+import java.util.Random;
 
 public class Main {
     public static void main(String[] args) {
 
         try {
-//            JSONObject jo = (JSONObject) new JSONParser().parse(new FileReader("src/main/resources/config/config1.json"));
             Config config = new Config("src/main/resources/config/config1.json");
 
             System.out.println("Hello World!");

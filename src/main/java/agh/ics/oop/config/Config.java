@@ -1,10 +1,7 @@
 package agh.ics.oop.config;
 
 import agh.ics.oop.core_classes.Vector;
-import agh.ics.oop.variant_enums.BehaviorVariant;
-import agh.ics.oop.variant_enums.MapVariant;
-import agh.ics.oop.variant_enums.MutationsVariant;
-import agh.ics.oop.variant_enums.PlantGrowthVariant;
+import agh.ics.oop.variant_enums.*;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -94,6 +91,15 @@ public class Config {
         } catch (IllegalArgumentException ex) {
             System.out.println(ex.getMessage());
             return BehaviorVariant.FULL_PREDESTINATION;
+        }
+    }
+
+    public RecombinationVariant getRecombinationVariant() {
+        try {
+            return RecombinationVariant.fromString((String) configData.get("recombinationVariant"));
+        } catch (IllegalArgumentException ex) {
+            System.out.println(ex.getMessage());
+            return RecombinationVariant.DARWINIAN;
         }
     }
 }

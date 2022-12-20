@@ -3,9 +3,9 @@ package agh.ics.oop.maps;
 import agh.ics.oop.config.Config;
 import agh.ics.oop.core_classes.IPositionObserver;
 import agh.ics.oop.core_classes.Vector;
-import agh.ics.oop.entities.Animal;
-import agh.ics.oop.entities.Entity;
-import agh.ics.oop.entities.Plant;
+import agh.ics.oop.entities.*;
+import agh.ics.oop.genes.Genome;
+import agh.ics.oop.genes.GenomeFactory;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -17,22 +17,31 @@ public abstract class EntityMap implements IWorldMap<Entity>, IPositionObserver 
     private final List<Animal> animals = new LinkedList<>();
     private final List<Plant> plants = new LinkedList<>();
 
+    private final PlantGrower plantGrower;
+
     public final Vector size;
     private final Config config;
 
-    public EntityMap(Config config) {
+    public EntityMap(Config config, TileMap tileMap) {
         this.config = config;
         size = config.getMapSize();
+        this.plantGrower = switch (config.getPlantGrowthVariant()) {
+            case TOXIC_CARCASSES -> new ToxicCarcassesGrower(tileMap);
+            case OVERGROWN_EQUATORS -> new OvergrownEquatorsGrower(tileMap);
+        };
+
         for (int i = 0; i < config.getStartingAnimals(); i++) spawnAnimal();
-//        for (int i = 0; i < config.getStartingPlants(); i++) growPlant();
+        for (int i = 0; i < config.getStartingPlants(); i++) growPlant();
     }
 
     public void spawnAnimal() {
         Random random = new Random();
-        place(new Animal(new Vector(random.nextInt(size.x), random.nextInt(size.y)), this, config));
+        place(new Animal(new Vector(random.nextInt(size.x), random.nextInt(size.y)), this, config, GenomeFactory.createGenome(config), config.getStartingAnimalEnergy()));
     }
 
-    public abstract void growPlant();
+    public void growPlant() {
+        place(new Plant(plantGrower.getNewPlantPosition(), this, config));
+    }
 
     private boolean contains(Vector position) {
         return 0 <= position.x && position.x < size.x && 0 <= position.y && position.y < size.y;

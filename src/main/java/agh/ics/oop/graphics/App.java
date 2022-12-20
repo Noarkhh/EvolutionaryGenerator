@@ -57,7 +57,8 @@ public class App extends Application implements IPositionObserver {
         List<String> imageNames = List.of(new String[]{"N", "NE", "E", "SE", "S", "SW", "W", "NW", "plant"});
         ImageContainer imageContainer = new ImageContainer(imageNames);
         Config config = new Config("src/main/resources/config/config1.json");
-        entityMap = new Globe(config);
+        this.tileMap = new TileMap(config);
+        entityMap = new Globe(config, tileMap);
     }
 
     private void drawHeaders(GridPane grid) {
