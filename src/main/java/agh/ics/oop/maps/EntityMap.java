@@ -8,13 +8,14 @@ import agh.ics.oop.genes.Genome;
 import agh.ics.oop.genes.GenomeFactory;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public abstract class EntityMap implements IWorldMap<Entity>, IPositionObserver {
     private final HashMap<Vector, List<Entity>> entities = new HashMap<>();
     private final List<Animal> animals = new LinkedList<>();
-    private final List<Plant> plants = new LinkedList<>();
 
     private final PlantGrower plantGrower;
+    private final EntitiesEngine entitiesEngine;
 
     public final Vector size;
     private final Config config;
@@ -22,18 +23,25 @@ public abstract class EntityMap implements IWorldMap<Entity>, IPositionObserver 
     public EntityMap(Config config, TileMap tileMap) {
         this.config = config;
         size = config.getMapSize();
-        this.plantGrower = switch (config.getPlantGrowthVariant()) {
+        plantGrower = switch (config.getPlantGrowthVariant()) {
             case TOXIC_CARCASSES -> new ToxicCarcassesGrower(tileMap);
             case OVERGROWN_EQUATORS -> new OvergrownEquatorsGrower(tileMap);
         };
+        entitiesEngine = new EntitiesEngine(entities, this);
 
         for (int i = 0; i < config.getStartingAnimals(); i++) spawnAnimal();
         for (int i = 0; i < config.getStartingPlants(); i++) growPlant();
     }
 
+    public void run() {
+        for (Animal animal : animals) animal.move();
+        entitiesEngine.feast();
+        entitiesEngine.procreate();
+    }
+
     public void spawnAnimal() {
         Random random = new Random();
-        place(new Animal(new Vector(random.nextInt(size.x), random.nextInt(size.y)), this, config, GenomeFactory.createGenome(config), config.getStartingAnimalEnergy()));
+        place(new Animal(new Vector(random.nextInt(size.x), random.nextInt(size.y)), this, config, GenomeFactory.createGenome(config), new LinkedList<>()));
     }
 
     public void growPlant() {
@@ -72,7 +80,6 @@ public abstract class EntityMap implements IWorldMap<Entity>, IPositionObserver 
             entities.put(objectToPlace.getPosition(), new LinkedList<>(List.of(objectToPlace)));
         }
         if (objectToPlace instanceof Animal) animals.add((Animal) objectToPlace);
-        else if (objectToPlace instanceof Plant) plants.add((Plant) objectToPlace);
     }
 
     @Override
@@ -85,14 +92,12 @@ public abstract class EntityMap implements IWorldMap<Entity>, IPositionObserver 
     }
 
     @Override
-    public boolean remove(Entity objectToRemove) {
-        return remove(objectToRemove.getPosition(), objectToRemove);
+    public void remove(Entity objectToRemove) {
+        remove(objectToRemove.getPosition(), objectToRemove);
     }
 
-    public void procreate() {
-        for (Map.Entry<Vector, List<Entity>> entry : entities.entrySet()) {
-            if (entry.getValue().size() < 2) continue;
-
-        }
+    @Override
+    public String toString() {
+        return entities.toString();
     }
 }

@@ -17,13 +17,15 @@ public class Animal extends Entity {
     private int energy;
     private int age = 0;
     private final List<Animal> children = new LinkedList<>();
+    private final List<Animal> parents;
     public final Genome genome;
 
-    public Animal(Vector position, EntityMap entityMap, Config config, Genome genome, int energy) {
+    public Animal(Vector position, EntityMap entityMap, Config config, Genome genome, List<Animal> parents) {
         super(position, entityMap);
         this.config = config;
         this.genome = genome;
-        this.energy = energy;
+        this.parents = parents;
+        energy = parents.size() > 0 ? config.getProcreationEnergyCost() * parents.size() : config.getStartingAnimalEnergy();
         image = imageContainer.getImage(this);
     }
 
@@ -35,22 +37,53 @@ public class Animal extends Entity {
         return energy;
     }
 
-    public void addChild(Animal child) {
-        children.add(child);
+    public int getAge() {
+        return age;
+    }
+
+    public List<Animal> getChildren() {
+        return children;
+    }
+
+    public void rotateBy(int rotation) {
+        direction = direction.rotateBy(rotation);
+    }
+
+    public void move() {
+        rotateBy(genome.getNextGene());
+        position = position.add(direction.toUnitVector());
+        age++;
+    }
+
+    public void eatPlant(Plant plant) {
+        energy += plant.getEnergy();
     }
 
     public void spendProcreationEnergy() {
         energy -= config.getProcreationEnergyCost();
     }
 
+    public boolean isAbleToProcreate() {
+        return energy >= config.getProcreationEnergyCost();
+    }
+
+    public void addChild(Animal child) {
+        children.add(child);
+    }
+
     public Animal procreate(Animal partner) {
         Animal child = new Animal(position, entityMap, config,
-                GenomeFactory.createGenome(config, this, partner), config.getProcreationEnergyCost() * 2);
+                GenomeFactory.createGenome(config, this, partner), new LinkedList<>(List.of(this, partner)));
         spendProcreationEnergy();
         addChild(child);
         partner.spendProcreationEnergy();
         partner.addChild(child);
 
         return child;
+    }
+
+    @Override
+    public String toString() {
+        return "Animal(e: " + energy + ", " + position + ")";
     }
 }

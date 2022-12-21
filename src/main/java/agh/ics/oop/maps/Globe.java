@@ -11,11 +11,6 @@ public class Globe extends EntityMap{
     }
 
     @Override
-    public void growPlant() {
-
-    }
-
-    @Override
     protected void bringBackToBounds(Animal movedAnimal) {
 
     }

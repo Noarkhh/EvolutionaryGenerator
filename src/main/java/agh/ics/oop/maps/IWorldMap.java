@@ -8,5 +8,5 @@ public interface IWorldMap<T> {
     List<T> objectsAt(Vector position);
     void place(T objectToPlace);
     boolean remove(Vector position, T objectToRemove);
-    boolean remove(T objectToRemove);
+    void remove(T objectToRemove);
 }

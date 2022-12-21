@@ -21,6 +21,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.Stage;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class App extends Application implements IPositionObserver {
@@ -60,9 +61,12 @@ public class App extends Application implements IPositionObserver {
         Config config = new Config("src/main/resources/config/config1.json");
         this.tileMap = new TileMap(config);
         entityMap = new Globe(config, tileMap);
-        entityMap.place(new Animal(new Vector(5, 5), entityMap, config, GenomeFactory.createGenome(config), config.getStartingAnimalEnergy()));
-        entityMap.place(new Animal(new Vector(5, 5), entityMap, config, GenomeFactory.createGenome(config), config.getStartingAnimalEnergy()));
-        entityMap.procreate();
+        entityMap.place(new Animal(new Vector(5, 5), entityMap, config, GenomeFactory.createGenome(config), new LinkedList<>()));
+        entityMap.place(new Animal(new Vector(5, 5), entityMap, config, GenomeFactory.createGenome(config), new LinkedList<>()));
+        System.out.println(entityMap);
+        entityMap.run();
+        System.out.println(entityMap);
+//        entityMap.procreate();
     }
 
     private void drawHeaders(GridPane grid) {
@@ -105,12 +109,14 @@ public class App extends Application implements IPositionObserver {
         if (entities == null) return;
 
 //        GuiElementBox guiElementBox = new GuiElementBox(elementToDraw, spriteContainer);
-        ImageView imageView = new ImageView(entities.get(0).getImage());
-        imageView.setFitHeight(60);
-        imageView.setFitWidth(60);
+        for (Entity entity : entities) {
+            ImageView imageView = new ImageView(entity.getImage());
+            imageView.setFitHeight(60);
+            imageView.setFitWidth(60);
 
-        grid.add(imageView, gridDrawPosition.x, gridDrawPosition.y);
-        GridPane.setHalignment(imageView, HPos.CENTER);
+            grid.add(imageView, gridDrawPosition.x, gridDrawPosition.y);
+            GridPane.setHalignment(imageView, HPos.CENTER);
+        }
     }
 
     @Override

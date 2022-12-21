@@ -18,6 +18,7 @@ import org.json.simple.parser.JSONParser;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -30,17 +31,6 @@ public class Main {
             Config config = new Config("src/main/resources/config/config1.json");
             TileMap tileMap = new TileMap(config);
             EntityMap entityMap = new Globe(config, tileMap);
-            Genome genome1 = GenomeFactory.createGenome(config);
-            Genome genome2 = GenomeFactory.createGenome(config);
-            Animal animal1 = new Animal(new Vector(0, 0), entityMap, config, genome1, 50);
-            Animal animal2 = new Animal(new Vector(0, 0), entityMap, config, genome2, 200);
-
-            System.out.println(genome1);
-            System.out.println(genome2);
-            System.out.println(Arrays.toString(new NonDarwinianRecombinator().recombine(animal1, animal2)));
-            System.out.println(Arrays.toString(new CorrectingMutator(config).mutate(new NonDarwinianRecombinator().recombine(animal1, animal2))));
-
-            System.out.println(config.getGenomeLength());
 
             Application.launch(App.class, args);
         } catch (Exception ex) {

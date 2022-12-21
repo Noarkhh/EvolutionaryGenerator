@@ -18,6 +18,10 @@ public class TileMap implements IWorldMap<Tile> {
         tiles = new Tile[size.x][size.y];
     }
 
+    public Vector getSize() {
+        return size;
+    }
+
     @Override
     public List<Tile> objectsAt(Vector position) {
         return null;
@@ -34,7 +38,7 @@ public class TileMap implements IWorldMap<Tile> {
     }
 
     @Override
-    public boolean remove(Tile objectToRemove) {
-        return false;
+    public void remove(Tile objectToRemove) {
+
     }
 }
