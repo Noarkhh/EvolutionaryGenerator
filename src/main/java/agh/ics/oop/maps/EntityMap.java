@@ -4,15 +4,14 @@ import agh.ics.oop.config.Config;
 import agh.ics.oop.core_classes.IPositionObserver;
 import agh.ics.oop.core_classes.Vector;
 import agh.ics.oop.entities.*;
-import agh.ics.oop.genes.Genome;
 import agh.ics.oop.genes.GenomeFactory;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public abstract class EntityMap implements IWorldMap<Entity>, IPositionObserver {
     private final HashMap<Vector, List<Entity>> entities = new HashMap<>();
     private final List<Animal> animals = new LinkedList<>();
+    private final HashMap<Vector, Plant> plants = new HashMap<>();
 
     private final PlantGrower plantGrower;
     private final EntitiesEngine entitiesEngine;
@@ -24,8 +23,8 @@ public abstract class EntityMap implements IWorldMap<Entity>, IPositionObserver 
         this.config = config;
         size = config.getMapSize();
         plantGrower = switch (config.getPlantGrowthVariant()) {
-            case TOXIC_CARCASSES -> new ToxicCarcassesGrower(tileMap);
-            case OVERGROWN_EQUATORS -> new OvergrownEquatorsGrower(tileMap);
+            case TOXIC_CARCASSES -> new ToxicCarcassesGrower(tileMap, plants);
+            case OVERGROWN_EQUATORS -> new OvergrownEquatorsGrower(tileMap, plants);
         };
         entitiesEngine = new EntitiesEngine(entities, this);
 
@@ -34,7 +33,7 @@ public abstract class EntityMap implements IWorldMap<Entity>, IPositionObserver 
     }
 
     public void run() {
-        for (Animal animal : animals) animal.move();
+        for (Animal animal : new LinkedList<>(animals)) animal.move();
         entitiesEngine.feast();
         entitiesEngine.procreate();
     }
@@ -56,8 +55,13 @@ public abstract class EntityMap implements IWorldMap<Entity>, IPositionObserver 
 
     @Override
     public void positionChanged(Animal movedAnimal, Vector oldPosition, Vector newPosition) {
-        remove(oldPosition, movedAnimal);
-        place(movedAnimal);
+        entities.get(oldPosition).remove(movedAnimal);
+        if (entities.get(oldPosition).isEmpty()) entities.remove(oldPosition);
+        if (entities.containsKey(newPosition)) {
+            entities.get(newPosition).add(movedAnimal);
+        } else {
+            entities.put(newPosition, new LinkedList<>(List.of(movedAnimal)));
+        }
     }
 
     @Override
@@ -80,6 +84,7 @@ public abstract class EntityMap implements IWorldMap<Entity>, IPositionObserver 
             entities.put(objectToPlace.getPosition(), new LinkedList<>(List.of(objectToPlace)));
         }
         if (objectToPlace instanceof Animal) animals.add((Animal) objectToPlace);
+        if (objectToPlace instanceof Plant) plants.put(objectToPlace.getPosition(), (Plant) objectToPlace);
     }
 
     @Override
@@ -88,6 +93,8 @@ public abstract class EntityMap implements IWorldMap<Entity>, IPositionObserver 
         if (entitiesAtRemovePosition == null) return false;
         if (!entitiesAtRemovePosition.remove(objectToRemove)) return false;
         if (entitiesAtRemovePosition.isEmpty()) entities.remove(objectToRemove.getPosition());
+        if (objectToRemove instanceof Animal) animals.remove((Animal) objectToRemove);
+        if (objectToRemove instanceof Plant) plants.remove(objectToRemove.getPosition());
         return true;
     }
 

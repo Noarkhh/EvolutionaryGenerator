@@ -7,14 +7,13 @@ import java.util.Map.Entry;
 
 public class CompetitorsGenerator {
 
-    private final Set<Entry<Vector, List<Entity>>> entities;
     private final Iterator<Entry<Vector, List<Entity>>> entityIterator;
     private final List<Animal> currentCompetitors = new LinkedList<>();
     private Vector currentPosition;
 
     public CompetitorsGenerator(HashMap<Vector, List<Entity>> entities) {
-        this.entities = entities.entrySet();
-        entityIterator = this.entities.iterator();
+//        this.entities = new LinkedList<>(entities.entrySet());
+        entityIterator = new LinkedList<>(entities.entrySet()).iterator();
         next(true);
     }
 

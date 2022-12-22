@@ -1,6 +1,7 @@
 package agh.ics.oop.entities;
 
 import agh.ics.oop.config.Config;
+import agh.ics.oop.core_classes.IPositionObserver;
 import agh.ics.oop.core_classes.MapDirection;
 import agh.ics.oop.core_classes.Vector;
 import agh.ics.oop.genes.Genome;
@@ -12,8 +13,10 @@ import java.util.List;
 
 public class Animal extends Entity {
 
-    private Config config;
+    private final Config config;
+    private final List<IPositionObserver> observers = new LinkedList<>();
     private MapDirection direction = MapDirection.getRandom();
+    private Vector previousPosition;
     private int energy;
     private int age = 0;
     private final List<Animal> children = new LinkedList<>();
@@ -22,6 +25,8 @@ public class Animal extends Entity {
 
     public Animal(Vector position, EntityMap entityMap, Config config, Genome genome, List<Animal> parents) {
         super(position, entityMap);
+        addObserver(entityMap);
+        previousPosition = position;
         this.config = config;
         this.genome = genome;
         this.parents = parents;
@@ -51,8 +56,14 @@ public class Animal extends Entity {
 
     public void move() {
         rotateBy(genome.getNextGene());
+        previousPosition = position;
         position = position.add(direction.toUnitVector());
         age++;
+        positionChanged();
+    }
+
+    private void positionChanged() {
+        for (IPositionObserver observer : observers) observer.positionChanged(this, previousPosition, position);
     }
 
     public void eatPlant(Plant plant) {
@@ -85,5 +96,9 @@ public class Animal extends Entity {
     @Override
     public String toString() {
         return "Animal(e: " + energy + ", " + position + ")";
+    }
+
+    public void addObserver(IPositionObserver observer) {
+        observers.add(observer);
     }
 }
