@@ -9,42 +9,20 @@ import agh.ics.oop.genes.GenomeFactory;
 import java.util.*;
 
 public abstract class EntityMap implements IWorldMap<Entity>, IPositionObserver {
-    private final HashMap<Vector, List<Entity>> entities = new HashMap<>();
-    private final List<Animal> animals = new LinkedList<>();
-    private final HashMap<Vector, Plant> plants = new HashMap<>();
-
-    private final PlantGrower plantGrower;
-    private final EntitiesEngine entitiesEngine;
+    private final HashMap<Vector, List<Entity>> entities;
+    private final List<Animal> animals;
+    private final HashMap<Vector, Plant> plants;
 
     public final Vector size;
     private final Config config;
 
-    public EntityMap(Config config, TileMap tileMap) {
+    public EntityMap(Config config, EntitiesContainer entitiesContainer, TileMap tileMap) {
         this.config = config;
+        this.entities = entitiesContainer.getEntities();
+        this.animals = entitiesContainer.getAnimals();
+        this.plants = entitiesContainer.getPlants();
         size = config.getMapSize();
-        plantGrower = switch (config.getPlantGrowthVariant()) {
-            case TOXIC_CARCASSES -> new ToxicCarcassesGrower(tileMap, plants);
-            case OVERGROWN_EQUATORS -> new OvergrownEquatorsGrower(tileMap, plants);
-        };
-        entitiesEngine = new EntitiesEngine(entities, this);
 
-        for (int i = 0; i < config.getStartingAnimals(); i++) spawnAnimal();
-        for (int i = 0; i < config.getStartingPlants(); i++) growPlant();
-    }
-
-    public void run() {
-        for (Animal animal : new LinkedList<>(animals)) animal.move();
-        entitiesEngine.feast();
-        entitiesEngine.procreate();
-    }
-
-    public void spawnAnimal() {
-        Random random = new Random();
-        place(new Animal(new Vector(random.nextInt(size.x), random.nextInt(size.y)), this, config, GenomeFactory.createGenome(config), new LinkedList<>()));
-    }
-
-    public void growPlant() {
-        place(new Plant(plantGrower.getNewPlantPosition(), this, config));
     }
 
     private boolean contains(Vector position) {

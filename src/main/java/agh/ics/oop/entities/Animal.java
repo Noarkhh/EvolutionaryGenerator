@@ -14,18 +14,17 @@ import java.util.List;
 public class Animal extends Entity {
 
     private final Config config;
-    private final List<IPositionObserver> observers = new LinkedList<>();
     private MapDirection direction = MapDirection.getRandom();
     private Vector previousPosition;
     private int energy;
     private int age = 0;
+    private boolean isAlive = true;
     private final List<Animal> children = new LinkedList<>();
     private final List<Animal> parents;
     public final Genome genome;
 
     public Animal(Vector position, EntityMap entityMap, Config config, Genome genome, List<Animal> parents) {
         super(position, entityMap);
-        addObserver(entityMap);
         previousPosition = position;
         this.config = config;
         this.genome = genome;
@@ -50,12 +49,16 @@ public class Animal extends Entity {
         return children;
     }
 
-    public void rotateBy(int rotation) {
+    private void rotateBy(int rotation) {
         direction = direction.rotateBy(rotation);
+        image = imageContainer.getImage(this);
+    }
+
+    public void rotate() {
+        rotateBy(genome.getNextGene());
     }
 
     public void move() {
-        rotateBy(genome.getNextGene());
         previousPosition = position;
         position = position.add(direction.toUnitVector());
         age++;
@@ -93,12 +96,16 @@ public class Animal extends Entity {
         return child;
     }
 
+    public void spendLivingEnergy() {
+        energy--;
+        if (energy < 0) {
+            remove();
+            isAlive = false;
+        }
+    }
+
     @Override
     public String toString() {
         return "Animal(e: " + energy + ", " + position + ")";
-    }
-
-    public void addObserver(IPositionObserver observer) {
-        observers.add(observer);
     }
 }

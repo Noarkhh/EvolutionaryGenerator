@@ -4,11 +4,14 @@ import agh.ics.oop.config.Config;
 import agh.ics.oop.core_classes.IPositionObserver;
 import agh.ics.oop.core_classes.Vector;
 import agh.ics.oop.entities.Animal;
+import agh.ics.oop.entities.EntitiesContainer;
+import agh.ics.oop.entities.EntitiesEngine;
 import agh.ics.oop.entities.Entity;
 import agh.ics.oop.maps.EntityMap;
 import agh.ics.oop.maps.Globe;
 import agh.ics.oop.maps.TileMap;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.HPos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -20,7 +23,7 @@ import javafx.stage.Stage;
 
 import java.util.List;
 
-public class App extends Application implements IPositionObserver {
+public class App extends Application {
 
     private EntityMap entityMap;
     private TileMap tileMap;
@@ -30,6 +33,7 @@ public class App extends Application implements IPositionObserver {
     private final Vector horizontalHeaderCellSize = new Vector(60, 25);
 
     private final GridPane grid = new GridPane();
+    private EntitiesEngine entitiesEngine;
 
     @Override
     public void start(Stage primaryStage) {
@@ -37,6 +41,7 @@ public class App extends Application implements IPositionObserver {
         Scene scene = new Scene(grid, windowSize.x, windowSize.y);
         primaryStage.setScene(scene);
         primaryStage.show();
+        new Thread(entitiesEngine).start();
     }
 
     public void updateGrid() {
@@ -55,13 +60,15 @@ public class App extends Application implements IPositionObserver {
         List<String> imageNames = List.of(new String[]{"N", "NE", "E", "SE", "S", "SW", "W", "NW", "plant"});
         ImageContainer imageContainer = new ImageContainer(imageNames);
         Config config = new Config("src/main/resources/config/config1.json");
-        this.tileMap = new TileMap(config);
-        entityMap = new Globe(config, tileMap);
+        EntitiesContainer entitiesContainer = new EntitiesContainer();
+        tileMap = new TileMap(config);
+        entityMap = new Globe(config, entitiesContainer, tileMap);
+        entitiesEngine = new EntitiesEngine(config, this, entitiesContainer, entityMap, tileMap);
 //        entityMap.place(new Animal(new Vector(5, 5), entityMap, config, GenomeFactory.createGenome(config), new LinkedList<>()));
 //        entityMap.place(new Animal(new Vector(5, 5), entityMap, config, GenomeFactory.createGenome(config), new LinkedList<>()));
         System.out.println(entityMap);
-        entityMap.run();
-        System.out.println(entityMap);
+//        entitiesEngine.run();
+//        System.out.println(entityMap);
 //        entityMap.procreate();
     }
 
@@ -112,13 +119,7 @@ public class App extends Application implements IPositionObserver {
         }
     }
 
-    @Override
-    public void positionChanged(Animal movedAnimal, Vector oldPosition, Vector newPosition) {
-
-    }
-
-    @Override
-    public void removedFrom(Entity removedEntity, Vector position) {
-
+    public void update() {
+        Platform.runLater(this::updateGrid);
     }
 }

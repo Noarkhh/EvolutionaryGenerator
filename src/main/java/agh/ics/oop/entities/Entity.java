@@ -9,18 +9,22 @@ import java.util.List;
 
 public abstract class Entity extends Sprite {
 
-    private final List<IPositionObserver> observers = new LinkedList<>();
+    protected final List<IPositionObserver> observers = new LinkedList<>();
     protected final EntityMap entityMap;
 
     protected Entity(Vector position, EntityMap entityMap) {
         super(position);
         this.entityMap = entityMap;
-        observers.add(entityMap);
+        addObserver(entityMap);
     }
 
-    private void removed() {
+    protected void remove() {
         for (IPositionObserver observer : observers) {
             observer.removedFrom(this, position);
         }
+    }
+
+    public void addObserver(IPositionObserver observer) {
+        observers.add(observer);
     }
 }

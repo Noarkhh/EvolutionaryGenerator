@@ -6,14 +6,10 @@ import agh.ics.oop.maps.TileMap;
 import java.util.HashMap;
 import java.util.Random;
 
-public class ToxicCarcassesGrower implements PlantGrower {
-    private final TileMap tileMap;
-    private final HashMap<Vector, Plant> plants;
-    private final Random RNG = new Random();
+public class ToxicCarcassesGrower extends PlantGrower {
 
     public ToxicCarcassesGrower(TileMap tileMap, HashMap<Vector, Plant> plants) {
-        this.tileMap = tileMap;
-        this.plants = plants;
+        super(tileMap, plants);
     }
 
     @Override
