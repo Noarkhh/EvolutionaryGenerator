@@ -40,6 +40,7 @@ public abstract class EntityMap implements IWorldMap<Entity>, IPositionObserver 
         } else {
             entities.put(newPosition, new LinkedList<>(List.of(movedAnimal)));
         }
+        if (!contains(movedAnimal.getPosition())) bringBackToBounds(movedAnimal);
     }
 
     @Override
@@ -54,8 +55,6 @@ public abstract class EntityMap implements IWorldMap<Entity>, IPositionObserver 
 
     @Override
     public void place(Entity objectToPlace) {
-        if (!contains(objectToPlace.getPosition())) bringBackToBounds((Animal) objectToPlace);
-
         if (entities.containsKey(objectToPlace.getPosition())) {
             entities.get(objectToPlace.getPosition()).add(objectToPlace);
         } else {

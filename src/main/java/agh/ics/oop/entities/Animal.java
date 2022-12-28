@@ -49,7 +49,7 @@ public class Animal extends Entity {
         return children;
     }
 
-    private void rotateBy(int rotation) {
+    public void rotateBy(int rotation) {
         direction = direction.rotateBy(rotation);
         image = imageContainer.getImage(this);
     }
@@ -62,6 +62,12 @@ public class Animal extends Entity {
         previousPosition = position;
         position = position.add(direction.toUnitVector());
         age++;
+        positionChanged();
+    }
+
+    public void moveTo(Vector newPosition) {
+        previousPosition = position;
+        position = newPosition;
         positionChanged();
     }
 
