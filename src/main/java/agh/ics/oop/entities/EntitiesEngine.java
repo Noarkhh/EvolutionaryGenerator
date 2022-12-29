@@ -3,16 +3,15 @@ package agh.ics.oop.entities;
 import agh.ics.oop.config.Config;
 import agh.ics.oop.core_classes.Vector;
 import agh.ics.oop.genes.GenomeFactory;
-import agh.ics.oop.graphics.App;
+import agh.ics.oop.graphics.Simulation;
 import agh.ics.oop.maps.EntityMap;
 import agh.ics.oop.maps.TileMap;
-import javafx.application.Application;
 
 import java.util.*;
 
 public class EntitiesEngine implements Runnable {
     private final Config config;
-    private final App app;
+    private final Simulation app;
     private final HashMap<Vector, List<Entity>> entities;
     private final List<Animal> animals;
     private final HashMap<Vector, Plant> plants;
@@ -21,7 +20,7 @@ public class EntitiesEngine implements Runnable {
     private final PlantGrower plantGrower;
 
 
-    public EntitiesEngine(Config config, App app, EntitiesContainer entitiesContainer, EntityMap entityMap, TileMap tileMap) {
+    public EntitiesEngine(Config config, Simulation app, EntitiesContainer entitiesContainer, EntityMap entityMap, TileMap tileMap) {
         this.config = config;
         this.app = app;
         this.entities = entitiesContainer.getEntities();
@@ -57,8 +56,8 @@ public class EntitiesEngine implements Runnable {
 
     private void finishStage() {
         try {
-            Thread.sleep(500);
             app.update();
+            Thread.sleep(500);
         } catch (InterruptedException ex) {
             System.out.println(ex.getMessage());
         }

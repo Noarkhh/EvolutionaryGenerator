@@ -25,6 +25,10 @@ public abstract class EntityMap implements IWorldMap<Entity>, IPositionObserver 
 
     }
 
+    public Map<Vector, List<Entity>> getEntities() {
+        return Collections.unmodifiableMap(entities);
+    }
+
     private boolean contains(Vector position) {
         return 0 <= position.x && position.x < size.x && 0 <= position.y && position.y < size.y;
     }
