@@ -1,4 +1,4 @@
-package agh.ics.oop.graphics;
+package agh.ics.oop.simulation;
 
 import agh.ics.oop.config.Config;
 import agh.ics.oop.config.ConfigSelector;
@@ -6,23 +6,24 @@ import agh.ics.oop.core_classes.Vector;
 import agh.ics.oop.entities.EntitiesContainer;
 import agh.ics.oop.entities.EntitiesEngine;
 import agh.ics.oop.entities.Entity;
-import agh.ics.oop.maps.EntityMap;
-import agh.ics.oop.maps.Globe;
-import agh.ics.oop.maps.HellishPortal;
-import agh.ics.oop.maps.TileMap;
+import agh.ics.oop.graphics.GuiElementBox;
+import agh.ics.oop.maps.*;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.Stage;
+import org.json.simple.parser.ParseException;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +31,7 @@ import java.util.Map;
 public class Simulation {
 
     private final EntityMap entityMap;
-    private TileMap tileMap;
+    private final EntitiesEngine entitiesEngine;
 
     private final Vector windowSize = new Vector(1400, 1000);
     private final Vector verticalHeaderCellSize = new Vector(25, 60);
@@ -38,27 +39,41 @@ public class Simulation {
 
     private final GridPane grid = new GridPane();
 
-    public Simulation(String configPath) throws Exception {
-        Stage stage = new Stage();
+    public Simulation(String configPath) throws IOException, ParseException {
         Config config = new Config(configPath);
         EntitiesContainer entitiesContainer = new EntitiesContainer();
-        tileMap = new TileMap(config);
-        entityMap = switch (config.getMapVariant()) {
-            case GLOBE -> new Globe(config, entitiesContainer, tileMap);
-            case HELLISH_PORTAL -> new HellishPortal(config, entitiesContainer, tileMap);
-        };
-        EntitiesEngine entitiesEngine = new EntitiesEngine(config, this, entitiesContainer, entityMap, tileMap);
+        entityMap = MapFactory.createEntityMap(config, entitiesContainer);
+        entitiesEngine = new EntitiesEngine(config, this, entitiesContainer, entityMap);
 
         drawHeaders();
         updateGrid();
+        setupWindow();
+
+        entitiesEngine.start();
+    }
+
+    private void setupWindow() {
+        Stage stage = new Stage();
         HBox hBox = new HBox(grid);
+        Button unpauseButton = new Button("Unpause");
+        unpauseButton.setOnAction(actionEvent -> entitiesEngine.getMutex().unlock());
+        Button pauseButton = new Button("Pause");
+        pauseButton.setOnAction(actionEvent -> entitiesEngine.getMutex().lock());
+        Button quitButton = new Button("Quit");
+        quitButton.setOnAction(actionEvent -> {
+            entitiesEngine.stopSimulation();
+            stage.close();
+        });
+
+        hBox.getChildren().add(unpauseButton);
+        hBox.getChildren().add(pauseButton);
+        hBox.getChildren().add(quitButton);
         Scene scene = new Scene(hBox, windowSize.x, windowSize.y);
         stage.setScene(scene);
         stage.show();
-        new Thread(entitiesEngine).start();
     }
 
-    public void updateGrid() {
+    private void updateGrid() {
         removeEntities();
         grid.setGridLinesVisible(false);
         drawEntities();

@@ -105,9 +105,13 @@ public class Animal extends Entity {
     public void spendLivingEnergy() {
         energy--;
         if (energy < 0) {
-            remove();
             isAlive = false;
+            remove();
         }
+    }
+
+    public boolean isAlive() {
+        return isAlive;
     }
 
     @Override

@@ -2,15 +2,17 @@ package agh.ics.oop.graphics;
 
 import agh.ics.oop.config.ConfigSelector;
 import agh.ics.oop.core_classes.Vector;
+import agh.ics.oop.simulation.Simulation;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
+import org.json.simple.parser.ParseException;
+import java.io.IOException;
 import java.util.List;
 
-import static java.lang.System.exit;
 import static java.lang.System.out;
 
 public class MainMenu extends Application {
@@ -20,15 +22,20 @@ public class MainMenu extends Application {
     public void start(Stage primaryStage) throws Exception {
         new ImageContainer(List.of(new String[]{"N", "NE", "E", "SE", "S", "SW", "W", "NW", "plant"}));
 
-        Button startButton = new Button("Start the simulation.");
+        Button refreshComboBox = new Button("Refresh");
+        Button startButton = new Button("Start the simulation");
         ConfigSelector configSelector = new ConfigSelector("src/main/resources/config");
-        HBox hBox = new HBox(configSelector.getComboBox(), startButton);
+        HBox hBox = new HBox(configSelector.getComboBox(), refreshComboBox, startButton);
+
+        refreshComboBox.setOnAction(actionEvent -> configSelector.reload());
 
         startButton.setOnAction(actionEvent -> {
             try {
                 new Simulation("src/main/resources/config/" + configSelector.getComboBox().getValue());
-            } catch (Exception exception) {
+            } catch (IOException exception) {
                 out.println(exception.getMessage());
+            } catch (ParseException exception) {
+                out.println("Invalid selected file contents.");
             }
         });
 

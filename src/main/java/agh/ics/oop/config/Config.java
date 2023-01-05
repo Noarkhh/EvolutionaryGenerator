@@ -4,13 +4,18 @@ import agh.ics.oop.core_classes.Vector;
 import agh.ics.oop.variant_enums.*;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
+import javax.xml.stream.FactoryConfigurationError;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 
 public class Config {
     private final JSONObject configData;
 
-    public Config(String configPath) throws Exception {
+    public Config(String configPath) throws IOException, ParseException {
         configData = (JSONObject) new JSONParser().parse(new FileReader(configPath));
     }
 

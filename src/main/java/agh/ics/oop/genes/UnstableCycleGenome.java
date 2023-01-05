@@ -1,6 +1,10 @@
 package agh.ics.oop.genes;
 
+import agh.ics.oop.core_classes.Vector;
 import agh.ics.oop.entities.Animal;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class UnstableCycleGenome extends Genome {
 
@@ -8,7 +12,7 @@ public class UnstableCycleGenome extends Genome {
         super(genomeLength);
     }
 
-    protected UnstableCycleGenome(int[] genes) {
+    protected UnstableCycleGenome(List<Integer> genes) {
         super(genes);
     }
 
@@ -19,6 +23,13 @@ public class UnstableCycleGenome extends Genome {
         } else {
             currentGeneIndex = (currentGeneIndex + 1) % 8;
         }
-        return genes[currentGeneIndex];
+        return genes.get(currentGeneIndex);
+    }
+
+    @Override
+    public boolean equals(Object other)  {
+        if (this == other) return true;
+        if (!(other instanceof UnstableCycleGenome other_g)) return false;
+        return this.genes.equals(other_g.genes);
     }
 }

@@ -1,7 +1,6 @@
 package agh.ics.oop.graphics;
 
 import agh.ics.oop.core_classes.MapDirection;
-import agh.ics.oop.core_classes.Tile;
 import agh.ics.oop.entities.Animal;
 import agh.ics.oop.entities.Plant;
 import agh.ics.oop.entities.Sprite;
@@ -29,8 +28,6 @@ public class ImageContainer {
             return imageMap.get(((Animal) sprite).getDirection().toString());
         } else if (sprite instanceof Plant) {
             return imageMap.get("plant");
-        } else if (sprite instanceof Tile) {
-            return imageMap.get(((Tile) sprite).terrain.toString());
         } else return imageMap.get("plant"); // placeholder
     }
 }

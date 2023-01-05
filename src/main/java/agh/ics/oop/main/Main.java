@@ -1,7 +1,6 @@
 package agh.ics.oop.main;
 
 import agh.ics.oop.graphics.MainMenu;
-import agh.ics.oop.graphics.Simulation;
 import javafx.application.Application;
 
 public class Main {

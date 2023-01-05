@@ -12,15 +12,17 @@ public abstract class EntityMap implements IWorldMap<Entity>, IPositionObserver 
     private final HashMap<Vector, List<Entity>> entities;
     private final List<Animal> animals;
     private final HashMap<Vector, Plant> plants;
+    private final List<Animal> graveyard;
 
     public final Vector size;
     private final Config config;
 
-    public EntityMap(Config config, EntitiesContainer entitiesContainer, TileMap tileMap) {
+    public EntityMap(Config config, EntitiesContainer entitiesContainer) {
         this.config = config;
         this.entities = entitiesContainer.getEntities();
         this.animals = entitiesContainer.getAnimals();
         this.plants = entitiesContainer.getPlants();
+        this.graveyard = entitiesContainer.getGraveyard();
         size = config.getMapSize();
 
     }
@@ -50,6 +52,7 @@ public abstract class EntityMap implements IWorldMap<Entity>, IPositionObserver 
     @Override
     public void removedFrom(Entity removedEntity, Vector position) {
         remove(position, removedEntity);
+        if (removedEntity instanceof Animal animal && !animal.isAlive()) graveyard.add(animal);
     }
 
     @Override

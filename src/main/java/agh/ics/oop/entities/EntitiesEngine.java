@@ -3,13 +3,14 @@ package agh.ics.oop.entities;
 import agh.ics.oop.config.Config;
 import agh.ics.oop.core_classes.Vector;
 import agh.ics.oop.genes.GenomeFactory;
-import agh.ics.oop.graphics.Simulation;
+import agh.ics.oop.simulation.Mutex;
+import agh.ics.oop.simulation.Simulation;
 import agh.ics.oop.maps.EntityMap;
-import agh.ics.oop.maps.TileMap;
 
 import java.util.*;
 
-public class EntitiesEngine implements Runnable {
+public class EntitiesEngine extends Thread {
+    private final Mutex mutex;
     private final Config config;
     private final Simulation app;
     private final HashMap<Vector, List<Entity>> entities;
@@ -19,8 +20,11 @@ public class EntitiesEngine implements Runnable {
     private final EntityMap entityMap;
     private final PlantGrower plantGrower;
 
+    private boolean running = true;
 
-    public EntitiesEngine(Config config, Simulation app, EntitiesContainer entitiesContainer, EntityMap entityMap, TileMap tileMap) {
+
+    public EntitiesEngine(Config config, Simulation app, EntitiesContainer entitiesContainer, EntityMap entityMap) {
+        this.mutex = new Mutex(false);
         this.config = config;
         this.app = app;
         this.entities = entitiesContainer.getEntities();
@@ -28,8 +32,8 @@ public class EntitiesEngine implements Runnable {
         this.plants = entitiesContainer.getPlants();
         this.entityMap = entityMap;
         plantGrower = switch (config.getPlantGrowthVariant()) {
-            case TOXIC_CARCASSES -> new ToxicCarcassesGrower(tileMap, plants);
-            case OVERGROWN_EQUATORS -> new OvergrownEquatorsGrower(tileMap, plants);
+            case TOXIC_CARCASSES -> new ToxicCarcassesGrower(plants);
+            case OVERGROWN_EQUATORS -> new OvergrownEquatorsGrower(config, plants);
         };
 
         for (int i = 0; i < config.getStartingPlants(); i++) growPlant();
@@ -38,7 +42,8 @@ public class EntitiesEngine implements Runnable {
 
     @Override
     public void run() {
-        while (true) {
+        while (running) {
+            mutex.step();
             finishStage();
             purge();
             finishStage();
@@ -61,6 +66,14 @@ public class EntitiesEngine implements Runnable {
         } catch (InterruptedException ex) {
             System.out.println(ex.getMessage());
         }
+    }
+
+    public Mutex getMutex() {
+        return this.mutex;
+    }
+
+    public void stopSimulation() {
+        running = false;
     }
 
     private void purge() {

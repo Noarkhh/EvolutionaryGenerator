@@ -2,6 +2,7 @@ package agh.ics.oop.genes;
 
 import agh.ics.oop.config.Config;
 
+import java.util.List;
 import java.util.Random;
 
 public abstract class Mutator {
@@ -13,5 +14,5 @@ public abstract class Mutator {
         minMutations = config.getMinMutations();
         maxMutations = config.getMaxMutations();
     }
-    public abstract int[] mutate(int[] genes);
+    public abstract List<Integer> mutate(List<Integer> genes);
 }

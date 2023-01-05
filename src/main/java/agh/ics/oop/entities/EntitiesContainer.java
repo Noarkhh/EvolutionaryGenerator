@@ -10,6 +10,7 @@ public class EntitiesContainer {
     private final HashMap<Vector, List<Entity>> entities = new HashMap<>();
     private final List<Animal> animals = new LinkedList<>();
     private final HashMap<Vector, Plant> plants = new HashMap<>();
+    private final List<Animal> graveyard = new LinkedList<>();
 
     public HashMap<Vector, List<Entity>> getEntities() {
         return entities;
@@ -21,5 +22,9 @@ public class EntitiesContainer {
 
     public HashMap<Vector, Plant> getPlants() {
         return plants;
+    }
+
+    public List<Animal> getGraveyard() {
+        return graveyard;
     }
 }
