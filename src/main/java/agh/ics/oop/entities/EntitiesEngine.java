@@ -15,12 +15,12 @@ public class EntitiesEngine extends Thread {
     private final Simulation app;
     private final HashMap<Vector, List<Entity>> entities;
     private final List<Animal> animals;
-    private final HashMap<Vector, Plant> plants;
 
     private final EntityMap entityMap;
     private final PlantGrower plantGrower;
 
     private boolean running = true;
+    private final long millisecondsBetweenStages;
 
 
     public EntitiesEngine(Config config, Simulation app, EntitiesContainer entitiesContainer, EntityMap entityMap) {
@@ -29,12 +29,9 @@ public class EntitiesEngine extends Thread {
         this.app = app;
         this.entities = entitiesContainer.getEntities();
         this.animals = entitiesContainer.getAnimals();
-        this.plants = entitiesContainer.getPlants();
         this.entityMap = entityMap;
-        plantGrower = switch (config.getPlantGrowthVariant()) {
-            case TOXIC_CARCASSES -> new ToxicCarcassesGrower(plants);
-            case OVERGROWN_EQUATORS -> new OvergrownEquatorsGrower(config, plants);
-        };
+        plantGrower = PlantGrowerFactory.createPlantGrower(config, entitiesContainer.getPlants());
+        millisecondsBetweenStages = config.getMillisecondsBetweenStages();
 
         for (int i = 0; i < config.getStartingPlants(); i++) growPlant();
         for (int i = 0; i < config.getStartingAnimals(); i++) spawnAnimal();
@@ -56,13 +53,14 @@ public class EntitiesEngine extends Thread {
             procreate();
             finishStage();
             grow();
+            app.refreshStatistics();
         }
     }
 
     private void finishStage() {
         try {
             app.update();
-            Thread.sleep(500);
+            Thread.sleep(millisecondsBetweenStages);
         } catch (InterruptedException ex) {
             System.out.println(ex.getMessage());
         }

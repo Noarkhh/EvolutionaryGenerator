@@ -1,7 +1,5 @@
 package agh.ics.oop.genes;
 
-import agh.ics.oop.entities.Animal;
-
 import java.util.List;
 
 public class StableCycleGenome extends Genome{
@@ -16,7 +14,7 @@ public class StableCycleGenome extends Genome{
 
     @Override
     public int getNextGene() {
-        currentGeneIndex = (currentGeneIndex + 1) % 8;
+        currentGeneIndex = (currentGeneIndex + 1) % genes.size();
         return genes.get(currentGeneIndex);
     }
 

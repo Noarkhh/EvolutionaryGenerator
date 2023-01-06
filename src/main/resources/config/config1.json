@@ -9,11 +9,12 @@
   "startingAnimals": 20,
   "startingAnimalEnergy": 20,
   "satiatedEnergy": 30,
-  "procreationEnergyCost": 5,
+  "procreationEnergyCost": 10,
   "minMutations": 1,
   "maxMutations": 3,
   "recombinationVariant": "Non-Darwinian",
   "mutationsVariant": "Full Random",
-  "genomeLength": 10,
-  "behaviorVariant": "Full Predestination"
+  "genomeLength": 4,
+  "behaviorVariant": "Full Predestination",
+  "millisecondsBetweenStages": 50
 }

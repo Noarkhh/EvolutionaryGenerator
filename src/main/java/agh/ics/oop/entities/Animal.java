@@ -84,7 +84,7 @@ public class Animal extends Entity {
     }
 
     public boolean isAbleToProcreate() {
-        return energy >= config.getProcreationEnergyCost();
+        return energy >= config.getSatiatedEnergy();
     }
 
     public void addChild(Animal child) {

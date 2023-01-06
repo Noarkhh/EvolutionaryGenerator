@@ -6,9 +6,6 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import javax.xml.stream.FactoryConfigurationError;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -33,15 +30,15 @@ public class Config {
     }
 
     public int getStartingPlants() {
-        return ((Long) configData.get("startingPlants")).intValue();
+        return configData.containsKey("startingPlants") ? ((Long) configData.get("startingPlants")).intValue() : 10;
     }
 
     public int getPlantEnergy() {
-        return ((Long) configData.get("plantEnergy")).intValue();
+        return configData.containsKey("plantEnergy") ? ((Long) configData.get("plantEnergy")).intValue() : 10;
     }
 
     public int getDailyPlants() {
-        return ((Long) configData.get("dailyPlants")).intValue();
+        return configData.containsKey("dailyPlants") ? ((Long) configData.get("dailyPlants")).intValue() : 3;
     }
 
     public PlantGrowthVariant getPlantGrowthVariant() {
@@ -54,27 +51,27 @@ public class Config {
     }
 
     public int getStartingAnimals() {
-        return ((Long) configData.get("startingAnimals")).intValue();
+        return configData.containsKey("startingAnimals") ? ((Long) configData.get("startingAnimals")).intValue() : 10;
     }
 
     public int getStartingAnimalEnergy() {
-        return ((Long) configData.get("startingAnimalEnergy")).intValue();
+        return configData.containsKey("startingAnimalEnergy") ? ((Long) configData.get("startingAnimalEnergy")).intValue() : 20;
     }
 
     public int getSatiatedEnergy() {
-        return ((Long) configData.get("satiatedEnergy")).intValue();
+        return configData.containsKey("satiatedEnergy") ? ((Long) configData.get("satiatedEnergy")).intValue() : 30;
     }
 
     public int getProcreationEnergyCost() {
-        return ((Long) configData.get("procreationEnergyCost")).intValue();
+        return configData.containsKey("procreationEnergyCost") ? ((Long) configData.get("procreationEnergyCost")).intValue() : 10;
     }
 
     public int getMinMutations() {
-        return ((Long) configData.get("minMutations")).intValue();
+        return configData.containsKey("minMutations") ? ((Long) configData.get("minMutations")).intValue() : 1;
     }
 
     public int getMaxMutations() {
-        return ((Long) configData.get("maxMutations")).intValue();
+        return configData.containsKey("maxMutations") ? ((Long) configData.get("maxMutations")).intValue() : 3;
     }
 
     public MutationsVariant getMutationsVariant() {
@@ -87,7 +84,7 @@ public class Config {
     }
 
     public int getGenomeLength() {
-        return ((Long) configData.get("genomeLength")).intValue();
+        return configData.containsKey("genomeLength") ? ((Long) configData.get("genomeLength")).intValue() : 8;
     }
 
     public BehaviorVariant getBehaviorVariant() {
@@ -106,5 +103,9 @@ public class Config {
             System.out.println(ex.getMessage());
             return RecombinationVariant.DARWINIAN;
         }
+    }
+
+    public Long getMillisecondsBetweenStages() {
+        return configData.containsKey("millisecondsBetweenStages") ? (Long) configData.get("millisecondsBetweenStages") : 500;
     }
 }
