@@ -20,6 +20,7 @@ public class OvergrownEquatorsGrower extends PlantGrower {
     @Override
     public Vector getNewPlantPosition() {
         Vector newPosition;
+        int attempts = 10;
         do {
             int x = RNG.nextInt(config.getMapSize().x);
             int y;
@@ -28,7 +29,8 @@ public class OvergrownEquatorsGrower extends PlantGrower {
                 else y = RNG.nextInt(equatorBottom, config.getMapSize().y);
             } else y = RNG.nextInt(equatorTop, equatorBottom);
             newPosition = new Vector(x, y);
-        } while (plants.containsKey(newPosition));
+            attempts--;
+        } while (plants.containsKey(newPosition) && attempts >= 0);
         return newPosition;
     }
 }

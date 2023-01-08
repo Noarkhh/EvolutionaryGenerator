@@ -3,7 +3,7 @@
   "mapHeight": 15,
   "mapVariant": "Globe",
   "startingPlants": 10,
-  "plantEnergy": 10,
+  "plantEnergy": 5,
   "dailyPlants": 3,
   "plantGrowthVariant": "Overgrown Equators",
   "startingAnimals": 20,
@@ -14,7 +14,7 @@
   "maxMutations": 3,
   "recombinationVariant": "Non-Darwinian",
   "mutationsVariant": "Full Random",
-  "genomeLength": 4,
+  "genomeLength": 1,
   "behaviorVariant": "Full Predestination",
   "millisecondsBetweenStages": 50
 }

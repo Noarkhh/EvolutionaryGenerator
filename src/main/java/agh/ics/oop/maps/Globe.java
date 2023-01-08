@@ -12,7 +12,6 @@ public class Globe extends EntityMap{
 
     @Override
     protected void bringBackToBounds(Animal animal) {
-        System.out.println("bringing back to bounds.");
         int newX = animal.getPosition().x;
         int newY = animal.getPosition().y;
         if (animal.getPosition().x < 0) {

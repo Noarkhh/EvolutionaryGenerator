@@ -26,6 +26,7 @@ public class Simulation {
     private final EntityMap entityMap;
     private final EntitiesEngine entitiesEngine;
     private final Statistics statistics;
+    private final CSVSaver csvSaver;
 
     private final Vector windowSize = new Vector(1400, 1000);
     private final Vector verticalHeaderCellSize = new Vector(25, 60);
@@ -33,12 +34,14 @@ public class Simulation {
 
     private final GridPane grid = new GridPane();
 
-    public Simulation(String configPath) throws IOException, ParseException {
+    public Simulation(String configPath, boolean saveToCSV) throws IOException, ParseException {
         Config config = new Config(configPath);
         EntitiesContainer entitiesContainer = new EntitiesContainer();
         entityMap = MapFactory.createEntityMap(config, entitiesContainer);
         entitiesEngine = new EntitiesEngine(config, this, entitiesContainer, entityMap);
         statistics = new Statistics(config, entitiesContainer);
+        if (saveToCSV) csvSaver = new CSVSaver("src/main/resources/logs", statistics);
+        else csvSaver = null;
 
         drawHeaders();
         updateGrid();
@@ -109,7 +112,7 @@ public class Simulation {
     private void drawEntities() {
         for (Map.Entry<Vector, List<Entity>> entitiesEntry : new HashSet<>(entityMap.getEntities().entrySet())) {
             for (Entity entity : entitiesEntry.getValue()) {
-                GuiElementBox guiElementBox = new GuiElementBox(entity);
+                GuiElementBox guiElementBox = new GuiElementBox(entity, statistics);
                 grid.add(guiElementBox.getBox(), entitiesEntry.getKey().x + 1, entitiesEntry.getKey().y + 1);
                 GridPane.setHalignment(guiElementBox.getBox(), HPos.CENTER);
             }
@@ -121,6 +124,9 @@ public class Simulation {
     }
 
     public void refreshStatistics() {
-        Platform.runLater(statistics::refresh);
+        Platform.runLater(() -> {
+            statistics.refresh();
+            if (csvSaver != null) csvSaver.logCurrentDay();
+        });
     }
 }

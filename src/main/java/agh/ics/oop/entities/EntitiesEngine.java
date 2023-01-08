@@ -101,7 +101,6 @@ public class EntitiesEngine extends Thread {
                 continue;
             }
             entityMap.place(parent1.procreate(parent2));
-            System.out.println(parent1 + " and " + parent2 + " had a child!");
             generator.next(false);
         }
     }
@@ -123,7 +122,6 @@ public class EntitiesEngine extends Thread {
                 continue;
             }
             competitors.get(0).eatPlant(plants.get(0));
-            System.out.println(plants.get(0).toString() + " eaten!");
             plants.get(0).remove();
             plants.remove(0);
             generator.next(false);

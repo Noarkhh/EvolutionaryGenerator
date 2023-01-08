@@ -31,7 +31,7 @@ public class MainMenu extends Application {
 
         startButton.setOnAction(actionEvent -> {
             try {
-                new Simulation("src/main/resources/config/" + configSelector.getComboBox().getValue());
+                new Simulation("src/main/resources/config/" + configSelector.getComboBox().getValue(), true);
             } catch (IOException exception) {
                 out.println(exception.getMessage());
             } catch (ParseException exception) {
