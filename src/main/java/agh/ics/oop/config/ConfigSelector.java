@@ -6,8 +6,8 @@ import java.io.File;
 import java.util.Objects;
 
 public class ConfigSelector {
-    private ComboBox<String> comboBox = new ComboBox<>();
-    private File configFolder;
+    private final ComboBox<String> comboBox = new ComboBox<>();
+    private final File configFolder;
 
     public ConfigSelector(String configFolderPath) {
         this.configFolder = new File(configFolderPath);
@@ -37,5 +37,9 @@ public class ConfigSelector {
 
     public ComboBox<String> getComboBox() {
         return comboBox;
+    }
+
+    public String getSelectedConfigPath() {
+        return configFolder + "/" + comboBox.getValue();
     }
 }

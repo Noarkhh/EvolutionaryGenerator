@@ -2,6 +2,7 @@ package agh.ics.oop.simulation;
 
 import agh.ics.oop.config.Config;
 import agh.ics.oop.core_classes.Vector;
+import agh.ics.oop.entities.Animal;
 import agh.ics.oop.entities.EntitiesContainer;
 import agh.ics.oop.entities.EntitiesEngine;
 import agh.ics.oop.entities.Entity;
@@ -9,9 +10,12 @@ import agh.ics.oop.graphics.GuiElementBox;
 import agh.ics.oop.maps.*;
 import javafx.application.Platform;
 import javafx.geometry.HPos;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import org.json.simple.parser.ParseException;
@@ -25,7 +29,9 @@ public class Simulation {
 
     private final EntityMap entityMap;
     private final EntitiesEngine entitiesEngine;
-    private final Statistics statistics;
+    private final SimulationStatistics simulationStatistics;
+    private AnimalStatistics animalStatistics;
+
     private final CSVSaver csvSaver;
 
     private final Vector windowSize = new Vector(1400, 1000);
@@ -34,18 +40,27 @@ public class Simulation {
 
     private final GridPane grid = new GridPane();
 
+
     public Simulation(String configPath, boolean saveToCSV) throws IOException, ParseException {
         Config config = new Config(configPath);
         EntitiesContainer entitiesContainer = new EntitiesContainer();
         entityMap = MapFactory.createEntityMap(config, entitiesContainer);
         entitiesEngine = new EntitiesEngine(config, this, entitiesContainer, entityMap);
-        statistics = new Statistics(config, entitiesContainer);
-        if (saveToCSV) csvSaver = new CSVSaver("src/main/resources/logs", statistics);
+        simulationStatistics = new SimulationStatistics(config, entitiesContainer);
+        if (saveToCSV) csvSaver = new CSVSaver("src/main/resources/logs", simulationStatistics);
         else csvSaver = null;
 
+        grid.setOnMouseClicked(event -> {
+            if (entitiesEngine.getMutex().isLocked()) {
+                animalStatistics.updateSelectedAnimal(selectAnimal(event));
+                animalStatistics.refresh();
+                updateGrid();
+            }
+        });
+
         drawHeaders();
-        updateGrid();
         setupWindow();
+        updateGrid();
 
         entitiesEngine.start();
     }
@@ -53,25 +68,51 @@ public class Simulation {
     private void setupWindow() {
 
         Stage stage = new Stage();
-        HBox mainBox = new HBox(grid);
 
         Button unpauseButton = new Button("Unpause");
-        unpauseButton.setOnAction(actionEvent -> entitiesEngine.getMutex().unlock());
         Button pauseButton = new Button("Pause");
-        pauseButton.setOnAction(actionEvent -> entitiesEngine.getMutex().lock());
+        unpauseButton.setOnAction(actionEvent -> {
+            entitiesEngine.getMutex().unlock();
+            unpauseButton.setDisable(true);
+            pauseButton.setDisable(false);
+        });
+        unpauseButton.setPrefSize(100, 30);
+        unpauseButton.setDisable(true);
+
+        pauseButton.setOnAction(actionEvent -> {
+            entitiesEngine.getMutex().lock();
+            unpauseButton.setDisable(false);
+            pauseButton.setDisable(true);
+        });
+        pauseButton.setPrefSize(100, 30);
+
         Button quitButton = new Button("Quit");
         quitButton.setOnAction(actionEvent -> {
             entitiesEngine.stopSimulation();
             stage.close();
         });
+        quitButton.setPrefSize(100, 30);
 
 
-        VBox vBox = new VBox(unpauseButton, pauseButton, quitButton, statistics.getGrid());
+        VBox infoBox = new VBox(pauseButton, unpauseButton, quitButton, simulationStatistics.getGrid());
+        infoBox.setAlignment(Pos.TOP_CENTER);
+        infoBox.setSpacing(10);
 
-        mainBox.getChildren().add(vBox);
+        animalStatistics = new AnimalStatistics(infoBox);
+
+        HBox mainBox = new HBox(grid, infoBox);
+        mainBox.setSpacing(10);
         Scene scene = new Scene(mainBox, windowSize.x, windowSize.y);
         stage.setScene(scene);
         stage.show();
+    }
+
+    private Animal selectAnimal(MouseEvent event) {
+        Node clickedNode = event.getPickResult().getIntersectedNode().getParent();
+        Integer colIndex = GridPane.getColumnIndex(clickedNode);
+        Integer rowIndex = GridPane.getRowIndex(clickedNode);
+        if (colIndex == null) return null;
+        return (Animal) entityMap.objectsAt(new Vector(colIndex - 1, rowIndex - 1)).stream().filter(en -> en instanceof Animal).toList().get(0);
     }
 
     private void updateGrid() {
@@ -112,7 +153,7 @@ public class Simulation {
     private void drawEntities() {
         for (Map.Entry<Vector, List<Entity>> entitiesEntry : new HashSet<>(entityMap.getEntities().entrySet())) {
             for (Entity entity : entitiesEntry.getValue()) {
-                GuiElementBox guiElementBox = new GuiElementBox(entity, statistics);
+                GuiElementBox guiElementBox = new GuiElementBox(entity, simulationStatistics, animalStatistics.getSelectedAnimal());
                 grid.add(guiElementBox.getBox(), entitiesEntry.getKey().x + 1, entitiesEntry.getKey().y + 1);
                 GridPane.setHalignment(guiElementBox.getBox(), HPos.CENTER);
             }
@@ -120,12 +161,15 @@ public class Simulation {
     }
 
     public void update() {
-        Platform.runLater(this::updateGrid);
+        Platform.runLater(() -> {
+                updateGrid();
+                animalStatistics.refresh();
+        });
     }
 
     public void refreshStatistics() {
         Platform.runLater(() -> {
-            statistics.refresh();
+            simulationStatistics.refresh();
             if (csvSaver != null) csvSaver.logCurrentDay();
         });
     }

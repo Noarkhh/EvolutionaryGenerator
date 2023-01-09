@@ -17,6 +17,7 @@ public class Animal extends Entity {
     private MapDirection direction = MapDirection.getRandom();
     private Vector previousPosition;
     private int energy;
+    private int plantsEaten = 0;
     private int age = 0;
     private boolean isAlive = true;
     private final List<Animal> children = new LinkedList<>();
@@ -77,6 +78,7 @@ public class Animal extends Entity {
 
     public void eatPlant(Plant plant) {
         energy += plant.getEnergy();
+        plantsEaten++;
     }
 
     public void spendProcreationEnergy() {
@@ -117,5 +119,9 @@ public class Animal extends Entity {
     @Override
     public String toString() {
         return "Animal(e: " + energy + ", " + position + ")";
+    }
+
+    public int getPlantsEaten() {
+        return plantsEaten;
     }
 }

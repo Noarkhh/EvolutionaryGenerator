@@ -13,7 +13,7 @@ public class StableCycleGenome extends Genome{
     }
 
     @Override
-    public int getNextGene() {
+    public Integer getNextGene() {
         currentGeneIndex = (currentGeneIndex + 1) % genes.size();
         return genes.get(currentGeneIndex);
     }

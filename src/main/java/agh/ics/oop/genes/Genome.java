@@ -1,9 +1,5 @@
 package agh.ics.oop.genes;
 
-import agh.ics.oop.config.Config;
-import agh.ics.oop.core_classes.Vector;
-import agh.ics.oop.entities.Animal;
-
 import java.util.*;
 
 public abstract class Genome {
@@ -13,7 +9,7 @@ public abstract class Genome {
     protected final Random RNG = new Random();
 
     protected Genome(int genomeLength) {
-        genes = new ArrayList<Integer>();
+        genes = new ArrayList<>();
         length = genomeLength;
         for (int i = 0; i < genomeLength; i++) {
             genes.add(RNG.nextInt(7));
@@ -27,10 +23,14 @@ public abstract class Genome {
         currentGeneIndex = RNG.nextInt(genes.size());
     }
 
-    public abstract int getNextGene();
+    public abstract Integer getNextGene();
 
-    public int getGeneAt(int index) {
+    public Integer getGeneAt(int index) {
         return genes.get(index);
+    }
+
+    public Integer getCurrentGeneIndex() {
+        return currentGeneIndex;
     }
 
     public List<Integer> getGenes() {

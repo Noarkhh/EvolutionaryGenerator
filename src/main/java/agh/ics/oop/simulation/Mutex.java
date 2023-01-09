@@ -30,4 +30,8 @@ public class Mutex {
             mutex.notify();
         }
     }
+
+    public boolean isLocked() {
+        return lock.get();
+    }
 }

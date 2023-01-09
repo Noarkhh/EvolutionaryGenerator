@@ -30,7 +30,7 @@ public class EntitiesEngine extends Thread {
         this.entities = entitiesContainer.getEntities();
         this.animals = entitiesContainer.getAnimals();
         this.entityMap = entityMap;
-        plantGrower = PlantGrowerFactory.createPlantGrower(config, entitiesContainer.getPlants());
+        plantGrower = PlantGrowerFactory.createPlantGrower(config, entitiesContainer.getPlants(), entitiesContainer.getDeathSpots());
         millisecondsBetweenStages = config.getMillisecondsBetweenStages();
 
         for (int i = 0; i < config.getStartingPlants(); i++) growPlant();
@@ -40,7 +40,6 @@ public class EntitiesEngine extends Thread {
     @Override
     public void run() {
         while (running) {
-            mutex.step();
             finishStage();
             purge();
             finishStage();
@@ -61,6 +60,8 @@ public class EntitiesEngine extends Thread {
         try {
             app.update();
             Thread.sleep(millisecondsBetweenStages);
+            mutex.step();
+
         } catch (InterruptedException ex) {
             System.out.println(ex.getMessage());
         }

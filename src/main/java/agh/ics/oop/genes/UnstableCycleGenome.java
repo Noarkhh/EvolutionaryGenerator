@@ -1,9 +1,5 @@
 package agh.ics.oop.genes;
 
-import agh.ics.oop.core_classes.Vector;
-import agh.ics.oop.entities.Animal;
-
-import java.util.Arrays;
 import java.util.List;
 
 public class UnstableCycleGenome extends Genome {
@@ -17,7 +13,7 @@ public class UnstableCycleGenome extends Genome {
     }
 
     @Override
-    public int getNextGene() {
+    public Integer getNextGene() {
         if (RNG.nextInt(5) == 0) {
             currentGeneIndex = RNG.nextInt(length);
         } else {

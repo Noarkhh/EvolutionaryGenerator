@@ -5,7 +5,7 @@
   "startingPlants": 10,
   "plantEnergy": 10,
   "dailyPlants": 3,
-  "plantGrowthVariant": "Overgrown Equators",
+  "plantGrowthVariant": "Toxic Carcasses",
   "startingAnimals": 20,
   "startingAnimalEnergy": 20,
   "satiatedEnergy": 30,
@@ -15,5 +15,6 @@
   "recombinationVariant": "Non-Darwinian",
   "mutationsVariant": "Full Random",
   "genomeLength": 10,
-  "behaviorVariant": "Full Predestination"
+  "behaviorVariant": "A Tad Of Tomfoolery",
+  "millisecondsBetweenStages": 100
 }
