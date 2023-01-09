@@ -6,7 +6,6 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -19,6 +18,10 @@ public class Config {
 
     public Vector getMapSize() {
         return new Vector(((Long) configData.get("mapWidth")).intValue(), ((Long) configData.get("mapHeight")).intValue());
+    }
+
+    public int getCellSize() {
+        return configData.containsKey("cellSize") ? ((Long) configData.get("cellSize")).intValue() : 60;
     }
 
     public MapVariant getMapVariant() {

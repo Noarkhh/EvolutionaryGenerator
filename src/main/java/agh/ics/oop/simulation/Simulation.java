@@ -15,6 +15,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
@@ -32,11 +33,12 @@ public class Simulation {
     private final SimulationStatistics simulationStatistics;
     private AnimalStatistics animalStatistics;
 
-    private final CSVSaver csvSaver;
+    private final CSVLogger csvLogger;
 
+    private final int cellSize;
     private final Vector windowSize = new Vector(1400, 1000);
-    private final Vector verticalHeaderCellSize = new Vector(25, 60);
-    private final Vector horizontalHeaderCellSize = new Vector(60, 25);
+    private final Vector verticalHeaderCellSize;
+    private final Vector horizontalHeaderCellSize;
 
     private final GridPane grid = new GridPane();
 
@@ -47,8 +49,12 @@ public class Simulation {
         entityMap = MapFactory.createEntityMap(config, entitiesContainer);
         entitiesEngine = new EntitiesEngine(config, this, entitiesContainer, entityMap);
         simulationStatistics = new SimulationStatistics(config, entitiesContainer);
-        if (saveToCSV) csvSaver = new CSVSaver("src/main/resources/logs", simulationStatistics);
-        else csvSaver = null;
+        if (saveToCSV) csvLogger = new CSVLogger("logs", simulationStatistics);
+        else csvLogger = null;
+
+        cellSize = config.getCellSize();
+        verticalHeaderCellSize = new Vector(25, cellSize);
+        horizontalHeaderCellSize = new Vector(cellSize, 25);
 
         grid.setOnMouseClicked(event -> {
             if (entitiesEngine.getMutex().isLocked()) {
@@ -101,8 +107,10 @@ public class Simulation {
         animalStatistics = new AnimalStatistics(infoBox);
 
         HBox mainBox = new HBox(grid, infoBox);
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(mainBox);
         mainBox.setSpacing(10);
-        Scene scene = new Scene(mainBox, windowSize.x, windowSize.y);
+        Scene scene = new Scene(scrollPane, windowSize.x, windowSize.y);
         stage.setScene(scene);
         stage.show();
     }
@@ -153,7 +161,7 @@ public class Simulation {
     private void drawEntities() {
         for (Map.Entry<Vector, List<Entity>> entitiesEntry : new HashSet<>(entityMap.getEntities().entrySet())) {
             for (Entity entity : entitiesEntry.getValue()) {
-                GuiElementBox guiElementBox = new GuiElementBox(entity, simulationStatistics, animalStatistics.getSelectedAnimal());
+                GuiElementBox guiElementBox = new GuiElementBox(entity, simulationStatistics, animalStatistics.getSelectedAnimal(), cellSize);
                 grid.add(guiElementBox.getBox(), entitiesEntry.getKey().x + 1, entitiesEntry.getKey().y + 1);
                 GridPane.setHalignment(guiElementBox.getBox(), HPos.CENTER);
             }
@@ -170,7 +178,7 @@ public class Simulation {
     public void refreshStatistics() {
         Platform.runLater(() -> {
             simulationStatistics.refresh();
-            if (csvSaver != null) csvSaver.logCurrentDay();
+            if (csvLogger != null) csvLogger.logCurrentDay();
         });
     }
 }

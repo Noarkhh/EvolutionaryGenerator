@@ -4,11 +4,11 @@ import java.util.List;
 
 public class UnstableCycleGenome extends Genome {
 
-    protected UnstableCycleGenome(int genomeLength) {
+    public UnstableCycleGenome(int genomeLength) {
         super(genomeLength);
     }
 
-    protected UnstableCycleGenome(List<Integer> genes) {
+    public UnstableCycleGenome(List<Integer> genes) {
         super(genes);
     }
 

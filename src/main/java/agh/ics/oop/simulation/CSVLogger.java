@@ -9,11 +9,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CSVSaver {
+public class CSVLogger {
     private final SimulationStatistics statistics;
     private final File logsFile;
 
-    public CSVSaver(String targetDirectoryPath, SimulationStatistics statistics) throws IOException {
+    public CSVLogger(String targetDirectoryPath, SimulationStatistics statistics) throws IOException {
         this.statistics = statistics;
         this.logsFile = new File(targetDirectoryPath + "/" + new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss-SSS").format(new Date()) + ".csv");
         if (!logsFile.createNewFile()) throw new IOException();

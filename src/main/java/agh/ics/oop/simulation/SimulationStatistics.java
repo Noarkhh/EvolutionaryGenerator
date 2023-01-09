@@ -80,6 +80,7 @@ public class SimulationStatistics implements Statistics {
 
     private void calculateMostPopularGenome() {
         Map<Genome, Integer> genomeOccurrences = new HashMap<>();
+        if (entitiesContainer.getAnimals().size() == 0) return;
         for (Animal animal : entitiesContainer.getAnimals()) {
             if (genomeOccurrences.containsKey(animal.genome)) {
                 genomeOccurrences.put(animal.genome, genomeOccurrences.get(animal.genome) + 1);
@@ -91,6 +92,10 @@ public class SimulationStatistics implements Statistics {
     }
 
     private void calculateAverageEnergy() {
+        if (entitiesContainer.getAnimals().size() == 0) {
+            averageEnergy = 0.0F;
+            return;
+        }
         float energySum = 0;
         for (Animal animal : entitiesContainer.getAnimals()) {
             energySum += animal.getEnergy();

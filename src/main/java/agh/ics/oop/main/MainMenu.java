@@ -1,7 +1,8 @@
-package agh.ics.oop.graphics;
+package agh.ics.oop.main;
 
 import agh.ics.oop.config.ConfigSelector;
 import agh.ics.oop.core_classes.Vector;
+import agh.ics.oop.graphics.ImageContainer;
 import agh.ics.oop.simulation.Simulation;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -38,7 +39,7 @@ public class MainMenu extends Application {
         Button quitButton = new Button("Quit");
         quitButton.setPrefSize(70, 30);
 
-        ConfigSelector configSelector = new ConfigSelector("src/main/resources/config");
+        ConfigSelector configSelector = new ConfigSelector("config");
         CheckBox csvCheckBox = new CheckBox("Log simulation statistics to CSV");
 
         HBox configBox = new HBox(configSelector.getComboBox(), refreshComboBox);
