@@ -23,7 +23,7 @@ import java.util.List;
 import static java.lang.System.out;
 
 public class MainMenu extends Application {
-    private final Vector windowSize = new Vector(1400, 1000);
+    private final Vector windowSize = new Vector(800, 600);
 
     @Override
     public void start(Stage primaryStage) {
